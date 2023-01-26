@@ -1,13 +1,14 @@
 const models = {}
 const db = require('../configs/db')
 
-models.showAll = () => {
+models.showAll = ({sortby, orderby}) => {
     return new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM trans`)
+        db.query(`SELECT * FROM trans ORDER BY ${orderby} ${sortby}`)
         .then((res) => {
             resolve(res.rows)
         })
         .catch((err) => {
+            console.log(err)
             reject(err)
         })
     })
@@ -55,6 +56,31 @@ models.insertData = (userid, total, date) => {
         })
     })
 
+}
+
+models.updateData = (userid, total, date, id) => {
+    return new Promise((resolve, reject) => {
+        db.query(`UPDATE trans SET userId = $1, total = $2, 
+        date = $3, updated_at = now() WHERE id = $4 RETURNING *`,[userid, total, date, id])
+        .then((res) => {
+            resolve(res.rows)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+models.deleteData = (id) => {
+    return new Promise((resolve, reject) => {
+        db.query(`DELETE FROM trans WHERE id= $1`, [id])
+        .then((res) => {
+            resolve(res.rows)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
 }
 
 module.exports = models

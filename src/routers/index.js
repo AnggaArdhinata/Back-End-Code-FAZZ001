@@ -3,10 +3,6 @@ const routers = express.Router()
 const transaction = require('./transaction')
 const users = require('./users')
 
-routers.use('/', (req, res) => {
-    res.send("Hello World")
-})
-
 routers.use('/transaction', transaction)
 routers.use('/users', users)
 

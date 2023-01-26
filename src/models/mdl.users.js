@@ -59,4 +59,28 @@ models.userAdd = (name) => {
 
 }
 
+models.updateData = (id, name) => {
+    return new Promise((resolve, reject) => {
+        db.query(`UPDATE users SET name = $1, updated_at = now() WHERE id = $2 RETURNING *`,[name, id])
+        .then((res) => {
+            resolve(res.rows)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+models.deleteData = (id) => {
+    return new Promise((resolve, reject) => {
+        db.query(`DELETE FROM users WHERE id= $1`, [id])
+        .then((res) => {
+            resolve(res.rows)
+        })
+        .catch((err) => {
+            reject(err)
+        })
+    })
+}
+
 module.exports = models
